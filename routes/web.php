@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Carbon\Carbon;
 
 /*
 |--------------------------------------------------------------------------
@@ -84,7 +85,8 @@ Route::get('campaign',function(){
 Route::get('facturacion',function(){
 
     $result = [ 
-        [
+        [   
+            'id'=>1,
             'fecha'=>'02/03/2023',
             'tipo'=>'Factura',
             'serie'=>'FFF1',
@@ -99,8 +101,9 @@ Route::get('facturacion',function(){
             'pdf'=>'https://www.nubefact.com/see_invoice/c41cfe6a-6157-43cb-8fce-b3f018012949.pdf',
             'xml'=>'https://www.nubefact.com/see_invoice/b1d2aefe-658f-422d-9f18-951b8202945c.xml',
             'estado'=>2
-        ],
-        [
+        ],  
+        [   
+            'id'=>2,
             'fecha'=>'06/03/2023',
             'tipo'=>'Boleta',
             'serie'=>'BBB1',
@@ -116,7 +119,8 @@ Route::get('facturacion',function(){
             'xml'=>'https://www.nubefact.com/see_invoice/b1d2aefe-658f-422d-9f18-951b8202945c.xml',
             'estado'=>2
         ],
-        [
+        [   
+            'id'=>3,
             'fecha'=>'04/03/2023',
             'tipo'=>'Factura',
             'serie'=>'FFF1',
@@ -132,7 +136,8 @@ Route::get('facturacion',function(){
             'xml'=>'',
             'estado'=>1
         ],
-        [
+        [   
+            'id'=>4,
             'fecha'=>'12/03/2023',
             'tipo'=>'Boleta',
             'serie'=>'BBB1',
@@ -151,7 +156,8 @@ Route::get('facturacion',function(){
 
     ];
 
-    return view('facturacion',compact('result'));
+    $actualizacion = Carbon::now()->subMinutes(5)->format('d/m/Y H:i:s');
+    return view('facturacion',compact('result','actualizacion'));
 })->name('facturacion');
 
 

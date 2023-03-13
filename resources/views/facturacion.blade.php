@@ -7,15 +7,18 @@
                 <li class="breadcrumb-item active">Facturación</li>
             </ol>
 
-            <button class="btn btn-primary btn-sm btn-sincronizar"><i class="fa fa-refresh"></i> Sincronizar Ventas</button>
+            <div class="alert alert-success" role="alert">
+             <i class="fa fa-clock" aria-hidden="true"></i> Los envíos Automáticos a Sunat se realizan cada 5 minutos. Última Actualización: <strong>{{ $actualizacion }}</strong>
+            </div>
 
-
+            <button class="btn btn-info btn-sm btn-sincronizar"><i class="fa fa-refresh"></i> Sincronizar Ventas</button>
+            <button class="btn btn-primary btn-sm btn-envio"><i class="fa fa-paper-plane"></i> Envío Manual</button>
             <hr>
             <div class="table-responsive">
                 <table id="consulta" class="table">
                     <thead>
                         <tr>
-
+                            <th></th>
                             <th>Fecha</th>
                             <th>Tipo</th>
                             <th>Serie</th>
@@ -43,7 +46,7 @@
             language:{
              url:"{{  asset('js/spanish.json') }}"
             },
-            order:[[0,'asc']],
+            order:[[3,'asc']],
             destroy:true,
             bAutoWidth: false,
             deferRender:true,
@@ -51,6 +54,7 @@
             bProcessing: true,
             data:result,
             columns:[
+                {data:'id'},
                 {data:'fecha'},
                 {data:'tipo'},
                 {data:'serie'},
@@ -103,7 +107,25 @@
                         return ``;
                     }
                 },'className':'text-center'}
-            ]
+            ],
+            columnDefs:[
+                {
+                    targets:0,
+                    checkboxes:{
+                        seletRow:true
+                    }
+                }
+            ],
+            initComplete: function(settings){
+                var api = this.api();
+                 api.cells(
+                    api.rows(function(idx, data, node){
+                       return (data.estado == 1 ) ? false : true;
+                    }).indexes(),
+                    0
+                 ).checkboxes.disable();
+            }
+
         });
 
         $(document).on('click','.btn-sincronizar',function(e){
@@ -130,24 +152,40 @@
             e.preventDefault();
         });
 
-        $(document).on('click','.btn-reporte',function(e){
+        $(document).on('click','.btn-envio',function(e){
+
+                var table= $('#consulta').DataTable();
+                var rows = table.column(0).checkboxes.selected();
+                var data = [];
+                $.each(rows,function(index,rowId){
+                    data.push(rowId);
+                });
+
+                if( data == 0){
+                    Swal.fire({
+                        title:'Lista Vacía',
+                        text :'No ha seleccionado ningún elemento',
+                        icon :'warning',
+                        showConfirmButton:false
+                    });
+                    return false;
+                }
 
                 Swal.fire({
-                  title: 'Generar Reporte',
-                  text: "Está opción generará el Reporte Estadístico de acuerdo a las promociones de productos y Compras Realizadas",
-                  imageUrl:'https://cdn.icon-icons.com/icons2/883/PNG/512/6_icon-icons.com_68891.png',
-                  imageWidth: 200,
+                  title: 'Envío Manual',
+                  text: "Está opción enviara los documentos en Estado Pendiente a Sunat.",
+                  icon :'info',
                   //imageHeight: 200,
                   showCancelButton: true,
                   confirmButtonColor: '#3085d6',
                   cancelButtonColor: '#d33',
-                  confirmButtonText: 'Generar',
+                  confirmButtonText: 'Enviar',
                   cancelButtonText:'Cancelar',
                 }).then((result) => {
                   if (result.isConfirmed) {
                     Swal.fire(
                       'Buen Trabajo',
-                      'Información Generada.',
+                      'Documentos Enviados',
                       'success'
                     )
                   }
