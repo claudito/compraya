@@ -1,0 +1,14 @@
+'fecha=>'02/03/2023',
+'tipo'=>'Factura',
+'serie=>'FFF1',
+'numero=>'14'
+'ruc=>'20338054115'
+'razon_social=>'AUSTRAL GROUP S.A.A.',
+'moneda=>'Sol',
+'monto=>'1200.00',
+'pagado=>1,
+'enviado=>0,
+'leido=>0
+'pdf=>'https://www.nubefact.com/see_invoice/c41cfe6a-6157-43cb-8fce-b3f018012949.pdf',
+'xml=>'https://www.nubefact.com/see_invoice/b1d2aefe-658f-422d-9f18-951b8202945c.xml',
+'estado=>'1'
